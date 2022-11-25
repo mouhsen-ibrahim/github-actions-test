@@ -12,12 +12,12 @@ on:
 jobs:
   comments:
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'help-wanted')
+    if: github.event.action == 'labeled' || github.event.action == 'unlabeled'
     steps:
       #- uses: actions/checkout@v3#
       - name: add comment
-        if : github.event.action == 'labeled'
+        if : contains(github.event.pull_request.labels.*.name, 'help-wanted')
         run: echo "Comment added"
       - name: remove comment
-        if : github.event.action == 'unlabeled'
+        if : ! contains(github.event.pull_request.labels.*.name, 'help-wanted')
         run: echo "Comment removed"
