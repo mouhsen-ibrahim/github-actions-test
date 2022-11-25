@@ -2,14 +2,22 @@ name: PR
 
 on:
   pull_request:
+    types:
+      - labeled
+      - unlabeled
+      - opened
+      - synchronize
+      - reopened
 
 jobs:
-  prepare-targets:
+  comments:
     runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'help-wanted')
     steps:
       #- uses: actions/checkout@v3#
-      - name: test
-        if: contains(github.event.pull_request.labels.*.name, 'help-wanted')
-        env:
-          GITHUB_EVENT: ${{ toJson(github.event) }}
-        run: echo "${GITHUB_EVENT}"
+      - name: add comment
+        if : github.event.action == 'labeled'
+        run: echo "Comment added"
+      - name: remove comment
+        if : github.event.action == 'unlabeled'
+        run: echo "Comment removed"
