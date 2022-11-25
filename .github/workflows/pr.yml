@@ -9,6 +9,7 @@ jobs:
     steps:
       #- uses: actions/checkout@v3
       - name: test
+        if: contains(github.event.pull_request.labels.*.name, 'help-wanted')
         env:
           GITHUB_EVENT: ${{ toJson(github.event) }}
         run: echo "${GITHUB_EVENT}"
