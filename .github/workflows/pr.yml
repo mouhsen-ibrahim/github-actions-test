@@ -9,4 +9,6 @@ jobs:
     steps:
       #- uses: actions/checkout@v3
       - name: test
-        run: echo ${{ github.event_name }}
+        env:
+          GITHUB_EVENT: ${{ toJson(github.event) }}
+        run: echo "${GITHUB_EVENT}"
