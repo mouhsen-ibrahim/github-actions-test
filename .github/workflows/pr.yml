@@ -27,6 +27,9 @@ jobs:
       - name: add comment
         if : contains(github.event.pull_request.labels.*.name, 'help-wanted')
         run: echo "Comment added"
+  undeploy:
+    runs-on: ubuntu-latest
+    steps:
       - name: undeploy
         if : contains(github.event.pull_request.labels.*.name, 'help-wanted') != true || github.event.action == 'closed'
         run: echo "undeploy"
