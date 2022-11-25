@@ -19,5 +19,5 @@ jobs:
         if : contains(github.event.pull_request.labels.*.name, 'help-wanted')
         run: echo "Comment added"
       - name: remove comment
-        if : ! (contains(github.event.pull_request.labels.*.name, 'help-wanted'))
+        if : contains(github.event.pull_request.labels.*.name, 'help-wanted') != true
         run: echo "Comment removed"
