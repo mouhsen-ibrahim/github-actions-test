@@ -14,18 +14,20 @@ on:
       - labeled
       - unlabeled
 jobs:
-  add-comment:
+  do:
     if: github.event.label.name == 'help-wanted'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     steps:
       - name: print
+        if : github.event.action == "unlabeled"
         env:
           GITHUB_EVENT: ${{ toJson(github.event) }}
         run: echo "${GITHUB_EVENT}"
       - name: Add comment
         uses: peter-evans/create-or-update-comment@a35cf36e5301d70b76f316e867e7788a55a31dae
+        if : github.event.action == "labeled"
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
