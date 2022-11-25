@@ -8,16 +8,26 @@ on:
       - opened
       - synchronize
       - reopened
+      - closed
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened'
+    steps:
+      - name: build
+        run: echo 'build code'
+      - name: deploy
+        if : contains(github.event.pull_request.labels.*.name, 'help-wanted')
+        run: echo 'deploy'
   comments:
     runs-on: ubuntu-latest
-    if: github.event.action == 'labeled' || github.event.action == 'unlabeled'
+    if: github.event.action == 'labeled' || github.event.action == 'unlabeled' || github.event.action == 'closed'
     steps:
       #- uses: actions/checkout@v3#
       - name: add comment
         if : contains(github.event.pull_request.labels.*.name, 'help-wanted')
         run: echo "Comment added"
-      - name: remove comment
-        if : contains(github.event.pull_request.labels.*.name, 'help-wanted') != true
-        run: echo "Comment removed"
+      - name: undeploy
+        if : contains(github.event.pull_request.labels.*.name, 'help-wanted') != true || github.event.action == 'closed'
+        run: echo "undeploy"
