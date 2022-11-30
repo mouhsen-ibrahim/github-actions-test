@@ -15,6 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.action == 'reopened' || github.event.action == 'labeled'
     steps:
+      - uses: actions/checkout@v3
+      - id: files
+        uses: tj-actions/changed-files@v29.0.7
+      - name: print changed file
+        run: echo ${{ steps.files.outputs.all_modified_files }}
       - name: build
         run: echo 'build code'
       - name: deploy
@@ -23,11 +28,6 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.action == 'labeled' || github.event.action == 'unlabeled' || github.event.action == 'closed'
     steps:
-      - uses: actions/checkout@v3
-      - id: files
-        uses: tj-actions/changed-files@v29.0.7
-      - name: print changed file
-        run: echo ${{ steps.files.outputs.all_modified_files }}
       - name: add comment
         if : contains(github.event.pull_request.labels.*.name, 'help-wanted')
         run: echo "Comment added"
